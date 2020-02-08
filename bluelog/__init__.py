@@ -4,6 +4,7 @@ import click
 
 from flask import Flask, render_template
 from .extensions import bootstrap, db, mail, moment, ckeditor
+from .models import Admin, Post, Category, Comment, Link
 
 from .settings import config
 
@@ -32,6 +33,15 @@ def register_extensions(app):
     mail.init_app(app)
     moment.init_app(app)
     ckeditor.init_app(app)
+
+
+def register_template_context(app):
+    @app.context_processor
+    def make_template_context():
+        admin = Admin.query.first()
+        categories = Category.query.order_by(Category.name).all()
+        links = Link.qeury.order_by(Link.name).all()
+        return dict(admin=admin, categories=categories, links=links)
 
 
 def register_errors(app):
