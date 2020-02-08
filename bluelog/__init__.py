@@ -14,6 +14,10 @@ def create_app(config_name=None):
 
     app = Flask('bluelog')
     app.config.from_object(config[config_name])
+    register_logging(app)
+    register_extensions(app)
+    register_commands(app)
+    register_errors(app)
 
     return app
 
