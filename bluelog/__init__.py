@@ -50,7 +50,7 @@ def register_errors(app):
 
 def register_commands(app):
     @app.cli.command()
-    @click.option('--drop', is_flags=True, help='Create after drop.')
+    @click.option('--drop', is_flag=True, help='Create after drop.')
     def initdb(drop):
         """Initialize the database."""
         if drop:
