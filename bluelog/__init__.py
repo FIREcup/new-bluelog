@@ -7,6 +7,9 @@ from .extensions import bootstrap, db, mail, moment, ckeditor, login_manager, cs
 from .models import Admin, Post, Category, Comment, Link
 from flask_login import current_user
 from flask_wtf.csrf import CSRFError
+from .blueprints.auth import auth_bp
+from .blueprints.admin import admin_bp
+from .blueprints.blog import blog_bp
 
 from .settings import config
 
@@ -28,6 +31,12 @@ def create_app(config_name=None):
 
 def register_logging(app):
     pass
+
+
+def register_blueprints(app):
+    app.register_blueprint(auth_bp)
+    app.register_blueprint(blog_bp)
+    app.register_blueprint(admin_bp)
 
 
 def register_extensions(app):
