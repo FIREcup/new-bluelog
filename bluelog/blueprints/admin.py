@@ -82,7 +82,7 @@ def delete_post(post_id):
     return redirect_back()
 
 
-@admin_bp.route('/psot/<int:post_id>/set-comment', methods=['POST'])
+@admin_bp.route('/post/<int:post_id>/set-comment', methods=['POST'])
 @login_required
 def set_comment(post_id):
     post = Post.query.get_or_404(post_id)
