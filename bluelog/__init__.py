@@ -3,8 +3,10 @@ import os
 import click
 
 from flask import Flask, render_template
-from .extensions import bootstrap, db, mail, moment, ckeditor
+from .extensions import bootstrap, db, mail, moment, ckeditor, login_manager, csrf
 from .models import Admin, Post, Category, Comment, Link
+from flask_login import current_user
+from flask_wtf.csrf import CSRFError
 
 from .settings import config
 
@@ -33,6 +35,8 @@ def register_extensions(app):
     mail.init_app(app)
     moment.init_app(app)
     ckeditor.init_app(app)
+    login_manager.init_app(app)
+    csrf.init_app(app)
 
 
 def register_template_context(app):
@@ -41,7 +45,11 @@ def register_template_context(app):
         admin = Admin.query.first()
         categories = Category.query.order_by(Category.name).all()
         links = Link.qeury.order_by(Link.name).all()
-        return dict(admin=admin, categories=categories, links=links)
+        if current_user.is_authenticated:
+            unread_comments = Comment.query.filter_by(reviewed=False).count()
+        else:
+            unread_comments = None
+        return dict(admin=admin, categories=categories, links=links, unread_comments=unread_comments)
 
 
 def register_errors(app):
@@ -56,6 +64,10 @@ def register_errors(app):
     @app.errorhandler(500)
     def internal_server_error(e):
         return render_template('errors/500.html'), 500
+
+    @app.errorhandler(CSRFError)
+    def handle_csrf_error(e):
+        return render_template('errors/400.html', description=e.description), 400
 
 
 def register_commands(app):
