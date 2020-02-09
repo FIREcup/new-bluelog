@@ -25,6 +25,7 @@ def create_app(config_name=None):
     register_commands(app)
     register_errors(app)
     register_template_context(app)
+    register_blueprints(app)
 
     return app
 
