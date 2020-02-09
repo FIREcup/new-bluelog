@@ -45,7 +45,7 @@ def register_template_context(app):
     def make_template_context():
         admin = Admin.query.first()
         categories = Category.query.order_by(Category.name).all()
-        links = Link.qeury.order_by(Link.name).all()
+        links = Link.query.order_by(Link.name).all()
         if current_user.is_authenticated:
             unread_comments = Comment.query.filter_by(reviewed=False).count()
         else:
